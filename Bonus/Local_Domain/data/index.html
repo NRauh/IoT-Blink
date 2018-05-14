@@ -1,0 +1,41 @@
+<html>
+<head lang="en">
+  <meta charset="UTF-8">
+  <title>Blink</title>
+</head>
+<body>
+  <h1>ESP8266 Blink</h1>
+
+  <form id="blinkForm">
+    <div>
+      <label for="blinkRate">Blink Rate</label>
+      <input type="number" name="blinkRate" id="blinkRate">
+    </div>
+    <div>
+      <label for="shouldBlink">Should Blink</label>
+      <input type="checkbox" name="shouldBlink" id="shouldBlink">
+    </div>
+    <div>
+      <button type="submit">Update</button>
+    </div>
+  </form>
+
+  <script>
+    document.querySelector('#blinkForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+
+      const postData = {
+        blink: document.querySelector('#shouldBlink').checked,
+        blinkRate: document.querySelector('#blinkRate').value,
+      };
+      const headers = {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(postData),
+      };
+
+      fetch('/blink', headers).then(res => console.log(res));
+    });
+  </script>
+</body>
+</html>

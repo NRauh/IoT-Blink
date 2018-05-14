@@ -23,3 +23,31 @@ Links to documentation for things used
 [ArduinoJson](https://github.com/bblanchon/ArduinoJson)
 
 [ESP8266 file system doc](http://esp8266.github.io/Arduino/versions/2.0.0/doc/filesystem.html)
+
+# Bonus Code
+
+In the Bonus directory, you can find examples that build off Serving_HTML.
+They are examples for things that might be useful to you, and do not build off
+of each other.
+
+## Local_Domain
+
+Example of using mDNS to setup a .local domain for the ESP8266.
+
+Here the different code.
+
+```cpp
+#include <ESP8266mDNS.h>
+
+void setup() {
+  // ...
+  MDNS.begin("iotblink");
+  // ...
+}
+```
+
+All this does is include the mDNS library, and setup the domain name.
+The server should now be able to be accessed at `iotblink.local`.
+
+I read some things that indicated this won't work for Android, but I wasn't able
+to try.
