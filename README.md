@@ -126,3 +126,34 @@ String getContentType(String filename) {
 
 `getContentType` just checks for what MIME type to use with the reponse.
 It just checks what the extension is, and returns the corresponding MIME type.
+
+## WiFiManager
+
+This example shows how you can use the WiFiManager library to not have to hard
+code the WiFi credentials.
+
+This will make it so if your ESP8266 isn't connected / can't connect to a
+network, it will create an access point that, when connected to, will let you
+connect to a network more intuitively.
+
+[https://github.com/tzapu/WiFiManager](https://github.com/tzapu/WiFiManager)
+
+*Note, in the IDE, use build removing wifi settings, else it won't be different*
+
+After installing the WifiManager library, here is all that is done.
+
+```cpp
+#include <WiFiManager.h>
+
+void setup() {
+  // ...
+
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("ESPConnect", "ESPConnectPassword");
+
+  // ...
+}
+```
+
+Replace `connectToWiFi()` in `setup` with this.
+(You can delete the whole function too.)
