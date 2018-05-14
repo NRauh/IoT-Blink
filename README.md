@@ -34,7 +34,7 @@ of each other.
 
 Example of using mDNS to setup a .local domain for the ESP8266.
 
-Here the different code.
+Here the different code:
 
 ```cpp
 #include <ESP8266mDNS.h>
@@ -51,3 +51,78 @@ The server should now be able to be accessed at `iotblink.local`.
 
 I read some things that indicated this won't work for Android, but I wasn't able
 to try.
+
+## Serving_Assets
+
+Code for being able to serve assets without defining each route.
+
+The result is being able to add `somefile.js` to `{sketch}/data/assets`, and
+have requests to `/assets/somefile.js` work without having to define that route
+in the Arduino code.
+
+Here's the new code:
+
+```cpp
+void setupServer() {
+  // ...
+
+  server.onNotFound([]() {
+    if (!handleAssets(server.uri())) {
+      server.send(404, "text/plain", "404 Not Found");
+    }
+  });
+
+  // ...
+}
+```
+
+First with our other routes, add `onNotFound` route.
+This will run on any route that isn't explicitly defined.
+It runs a lambda function similar to `() => { ... }` in JavaScript.
+
+When `handleAssets` returns false (the asset doesn't exist), we'll return 404.
+
+```cpp
+bool handleAssets(String path) {
+  if (!path.startsWith("/assets")) {
+    return false;
+  }
+
+  if (!SPIFFS.exists(path)) {
+    return false;
+  }
+
+  String contentType = getContentType(path);
+  File file = SPIFFS.open(path, "r");
+  server.streamFile(file, contentType);
+  file.close();
+  return true;
+}
+```
+
+`handleAssets` will first check to make sure the request is formatted like
+`/assets/:file`, but removing this check will let you serve files at any path.
+
+Next, check that the file actually exists.
+
+If it does, we'll get the content type (code below), open it in read mode,
+stream the file, close it then return true.
+
+```cpp
+String getContentType(String filename) {
+  if (filename.endsWith(".html")) {
+    return "text/html";
+  } else if (filename.endsWith(".css")) {
+    return "text/css";
+  } else if (filename.endsWith(".js")) {
+    return "application/javascript";
+  } else if (filename.endsWith(".ico")) {
+    return "image/x-icon";
+  } else {
+    return "text/plain";
+  }
+}
+```
+
+`getContentType` just checks for what MIME type to use with the reponse.
+It just checks what the extension is, and returns the corresponding MIME type.
