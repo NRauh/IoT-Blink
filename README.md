@@ -3,6 +3,15 @@ IoT Intro
 
 This is a repo to help get setup with the ESP8266 and create an IoT device.
 
+**Mac users**
+
+You need this this driver maybe
+
+[https://github.com/adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver](https://github.com/adrianmihalko/ch340g-ch34g-ch34x-mac-os-x-driver)
+
+Protip: use the homebrew version
+
+
 # Order
 
 The Arduino IDE doesn't allow sketches to start with a number.
